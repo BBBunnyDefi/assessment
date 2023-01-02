@@ -33,3 +33,9 @@ $ tree
 ├── server.go
 └── three-way-merge.png
 ```
+
+## implement graceful shutdown with middleware logger
+
+```sh
+$ PORT:2565 go run server.go
+```
