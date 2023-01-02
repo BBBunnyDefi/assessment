@@ -354,3 +354,22 @@ ok      github.com/BBBunnyDefi/assessment/rest/expenses (cached)
 ```
 
 > test with Thunder Client [EXP01 - EXP02]
+
+## commit & merge EXP02
+
+> switch to main branch and use 3 ways merge --no-ff
+
+```sh
+$ git switch main
+$ git merge --no-ff EXP02
+# :wq
+Merge made by the 'ort' strategy.
+ note.md                        |  69 ++++++++++++++++++++++++++++++++++++
+ rest/expenses/expenses.go      |  49 +++++++++++++++++++++-----
+ rest/expenses/expenses_test.go | 117 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++--
+ server.go                      |   2 ++
+ 4 files changed, 225 insertions(+), 12 deletions(-)
+```
+
+![01 Git Graph](img/01-git-graph.png)
+
