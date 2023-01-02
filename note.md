@@ -502,11 +502,4 @@ expenses
 * 4cf9280 create expenses struct & handler
 * 44a1d61 create project structure
 * e873bfb just empty note.md
-* a9f8b14 update readme
-* 69aa9a1 update readme
-* 2fdcad7 update readme
-* 97a1c87 update readme
-* ef2c1df add postmand collection
-* 9d27b30 update readme
-* 4ad3956 base project
 ```
