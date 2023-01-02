@@ -19,12 +19,14 @@ func main() {
 	fmt.Println("start at port:", os.Getenv("PORT"))
 	fmt.Println("docker database url:", os.Getenv("DATABASE_URL"))
 
-	h := expenses.NewApp(nil)
+	h := expenses.NewApp(expenses.InitDB(os.Getenv("DATABASE_URL")))
 
 	e := echo.New()
 	e.Use(middleware.Logger())
 
 	e.GET("/", h.HealthHandler)
+	// EXP01: POST /expenses - with json body
+	e.POST("/expenses", h.CreateExpensesHandler)
 
 	// implement graceful shutdown
 	// https://echo.labstack.com/cookbook/graceful-shutdown/
