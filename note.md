@@ -39,3 +39,16 @@ $ tree
 ```sh
 $ PORT:2565 go run server.go
 ```
+
+## create Makefile
+
+```sh
+$ make server
+```
+
+## update Dockerfile & docker-composer & db
+
+- docker-composer.test.yml
+- Dockerfile
+- Dockerfile.test
+- db/01-init.sql
