@@ -408,6 +408,112 @@ go mod tidy
 <li>Dockerfile.test</li>
 <li>db/01-init.sql</li>
 </ul>
+<h2 id="test-postman-collection">test postman-collection</h2>
+<blockquote>
+<p>should show all error</p>
+</blockquote>
+<pre class="hljs"><code><div><span class="hljs-comment"># run server</span>
+$ make server
+</div></code></pre>
+<pre class="hljs"><code><div>$ newman run expenses.postman_collection.json
+newman
+
+expenses
+
+→ create expense
+  POST http://localhost:2565/expenses [404 Not Found, 154B, 36ms]
+  ┌
+  │ { message: <span class="hljs-string">'Not Found'</span> }
+  └
+  1. should response success(201) and object of customer
+  2. Status code is 201 or 202
+
+→ get latest expense (expenses/:id)
+  GET http://localhost:2565/expenses/null [404 Not Found, 154B, 6ms]
+  3. Status code is 200
+  4. should response object of latest expense
+
+→ update latest expenses
+  PUT http://localhost:2565/expenses/null [404 Not Found, 154B, 4ms]
+  5. Status code is 200
+  6. should response success(200) and object of customer
+
+→ get all expenses
+  GET http://localhost:2565/expenses [404 Not Found, 154B, 4ms]
+  7. Status code is 200
+  8. should response success(200) and object of latest expense
+
+→ Bonus middleware check Autorization
+  GET http://localhost:2565/expenses [404 Not Found, 154B, 5ms]
+  9. Status code is 401 Unauthorized
+
+┌─────────────────────────┬──────────────────┬──────────────────┐
+│                         │         executed │           failed │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│              iterations │                1 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│                requests │                5 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│            <span class="hljs-built_in">test</span>-scripts │                5 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│      prerequest-scripts │                0 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│              assertions │                9 │                9 │
+├─────────────────────────┴──────────────────┴──────────────────┤
+│ total run duration: 190ms                                     │
+├───────────────────────────────────────────────────────────────┤
+│ total data received: 120B (approx)                            │
+├───────────────────────────────────────────────────────────────┤
+│ average response time: 11ms [min: 4ms, max: 36ms, s.d.: 12ms] │
+└───────────────────────────────────────────────────────────────┘
+
+  <span class="hljs-comment">#  failure                    detail                                                                                                   </span>
+                                                                                                                                         
+ 1.  AssertionError             should response success(201) and object of customer                                                      
+                                expected undefined to deeply equal <span class="hljs-string">'strawberry smoothie'</span>                                                 
+                                at assertion:0 <span class="hljs-keyword">in</span> <span class="hljs-built_in">test</span>-script                                                                            
+                                inside <span class="hljs-string">"create expense"</span>                                                                                  
+                                                                                                                                         
+ 2.  AssertionError             Status code is 201 or 202                                                                                
+                                expected 404 to be one of [ 201, 202 ]                                                                   
+                                at assertion:1 <span class="hljs-keyword">in</span> <span class="hljs-built_in">test</span>-script                                                                            
+                                inside <span class="hljs-string">"create expense"</span>                                                                                  
+                                                                                                                                         
+ 3.  AssertionError             Status code is 200                                                                                       
+                                expected response to have status code 200 but got 404                                                    
+                                at assertion:0 <span class="hljs-keyword">in</span> <span class="hljs-built_in">test</span>-script                                                                            
+                                inside <span class="hljs-string">"get latest expense (expenses/:id)"</span>                                                               
+                                                                                                                                         
+ 4.  TypeError                  should response object of latest expense                                                                 
+                                Cannot <span class="hljs-built_in">read</span> properties of undefined (reading <span class="hljs-string">'toString'</span>)                                                 
+                                at assertion:1 <span class="hljs-keyword">in</span> <span class="hljs-built_in">test</span>-script                                                                            
+                                inside <span class="hljs-string">"get latest expense (expenses/:id)"</span>                                                               
+                                                                                                                                         
+ 5.  AssertionError             Status code is 200                                                                                       
+                                expected response to have status code 200 but got 404                                                    
+                                at assertion:0 <span class="hljs-keyword">in</span> <span class="hljs-built_in">test</span>-script                                                                            
+                                inside <span class="hljs-string">"update latest expenses"</span>                                                                          
+                                                                                                                                         
+ 6.  TypeError                  should response success(200) and object of customer                                                      
+                                Cannot <span class="hljs-built_in">read</span> properties of undefined (reading <span class="hljs-string">'toString'</span>)                                                 
+                                at assertion:1 <span class="hljs-keyword">in</span> <span class="hljs-built_in">test</span>-script                                                                            
+                                inside <span class="hljs-string">"update latest expenses"</span>                                                                          
+                                                                                                                                         
+ 7.  AssertionError             Status code is 200                                                                                       
+                                expected response to have status code 200 but got 404                                                    
+                                at assertion:0 <span class="hljs-keyword">in</span> <span class="hljs-built_in">test</span>-script                                                                            
+                                inside <span class="hljs-string">"get all expenses"</span>                                                                                
+                                                                                                                                         
+ 8.  AssertionError             should response success(200) and object of latest expense                                                
+                                expenses should not be empty: expected undefined to be a number or a date                                
+                                at assertion:1 <span class="hljs-keyword">in</span> <span class="hljs-built_in">test</span>-script                                                                            
+                                inside <span class="hljs-string">"get all expenses"</span>                                                                                
+                                                                                                                                         
+ 9.  AssertionError             Status code is 401 Unauthorized                                                                          
+                                expected response to have status code 401 but got 404                                                    
+                                at assertion:0 <span class="hljs-keyword">in</span> <span class="hljs-built_in">test</span>-script                                                                            
+                                inside <span class="hljs-string">"Bonus middleware check Autorization"</span>          
+</div></code></pre>
 
 </body>
 </html>

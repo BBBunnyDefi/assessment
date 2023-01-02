@@ -52,3 +52,113 @@ $ make server
 - Dockerfile
 - Dockerfile.test
 - db/01-init.sql
+
+## test postman-collection
+
+> should show all error
+
+```sh
+# run server
+$ make server
+```
+
+```sh
+$ newman run expenses.postman_collection.json
+newman
+
+expenses
+
+→ create expense
+  POST http://localhost:2565/expenses [404 Not Found, 154B, 36ms]
+  ┌
+  │ { message: 'Not Found' }
+  └
+  1. should response success(201) and object of customer
+  2. Status code is 201 or 202
+
+→ get latest expense (expenses/:id)
+  GET http://localhost:2565/expenses/null [404 Not Found, 154B, 6ms]
+  3. Status code is 200
+  4. should response object of latest expense
+
+→ update latest expenses
+  PUT http://localhost:2565/expenses/null [404 Not Found, 154B, 4ms]
+  5. Status code is 200
+  6. should response success(200) and object of customer
+
+→ get all expenses
+  GET http://localhost:2565/expenses [404 Not Found, 154B, 4ms]
+  7. Status code is 200
+  8. should response success(200) and object of latest expense
+
+→ Bonus middleware check Autorization
+  GET http://localhost:2565/expenses [404 Not Found, 154B, 5ms]
+  9. Status code is 401 Unauthorized
+
+┌─────────────────────────┬──────────────────┬──────────────────┐
+│                         │         executed │           failed │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│              iterations │                1 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│                requests │                5 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│            test-scripts │                5 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│      prerequest-scripts │                0 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│              assertions │                9 │                9 │
+├─────────────────────────┴──────────────────┴──────────────────┤
+│ total run duration: 190ms                                     │
+├───────────────────────────────────────────────────────────────┤
+│ total data received: 120B (approx)                            │
+├───────────────────────────────────────────────────────────────┤
+│ average response time: 11ms [min: 4ms, max: 36ms, s.d.: 12ms] │
+└───────────────────────────────────────────────────────────────┘
+
+  #  failure                    detail                                                                                                   
+                                                                                                                                         
+ 1.  AssertionError             should response success(201) and object of customer                                                      
+                                expected undefined to deeply equal 'strawberry smoothie'                                                 
+                                at assertion:0 in test-script                                                                            
+                                inside "create expense"                                                                                  
+                                                                                                                                         
+ 2.  AssertionError             Status code is 201 or 202                                                                                
+                                expected 404 to be one of [ 201, 202 ]                                                                   
+                                at assertion:1 in test-script                                                                            
+                                inside "create expense"                                                                                  
+                                                                                                                                         
+ 3.  AssertionError             Status code is 200                                                                                       
+                                expected response to have status code 200 but got 404                                                    
+                                at assertion:0 in test-script                                                                            
+                                inside "get latest expense (expenses/:id)"                                                               
+                                                                                                                                         
+ 4.  TypeError                  should response object of latest expense                                                                 
+                                Cannot read properties of undefined (reading 'toString')                                                 
+                                at assertion:1 in test-script                                                                            
+                                inside "get latest expense (expenses/:id)"                                                               
+                                                                                                                                         
+ 5.  AssertionError             Status code is 200                                                                                       
+                                expected response to have status code 200 but got 404                                                    
+                                at assertion:0 in test-script                                                                            
+                                inside "update latest expenses"                                                                          
+                                                                                                                                         
+ 6.  TypeError                  should response success(200) and object of customer                                                      
+                                Cannot read properties of undefined (reading 'toString')                                                 
+                                at assertion:1 in test-script                                                                            
+                                inside "update latest expenses"                                                                          
+                                                                                                                                         
+ 7.  AssertionError             Status code is 200                                                                                       
+                                expected response to have status code 200 but got 404                                                    
+                                at assertion:0 in test-script                                                                            
+                                inside "get all expenses"                                                                                
+                                                                                                                                         
+ 8.  AssertionError             should response success(200) and object of latest expense                                                
+                                expenses should not be empty: expected undefined to be a number or a date                                
+                                at assertion:1 in test-script                                                                            
+                                inside "get all expenses"                                                                                
+                                                                                                                                         
+ 9.  AssertionError             Status code is 401 Unauthorized                                                                          
+                                expected response to have status code 401 but got 404                                                    
+                                at assertion:0 in test-script                                                                            
+                                inside "Bonus middleware check Autorization"          
+```
