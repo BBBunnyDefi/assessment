@@ -197,3 +197,11 @@ Merge made by the 'ort' strategy.
  6 files changed, 187 insertions(+), 1 deletion(-)
 ```
 
+## create sample integration test
+
+> `expenses_integration_test.go`
+>
+> no connection to database
+>
+> just test TestITHealthHandler
+
