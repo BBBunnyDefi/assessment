@@ -205,3 +205,83 @@ Merge made by the 'ort' strategy.
 >
 > just test TestITHealthHandler
 
+## first run docker compose test
+
+> command
+
+```sh
+# run
+$ docker-compose -f docker-composer.test.yml up --build --abort-on-container-exit --exit-code-from it_tests
+
+# down
+$ docker-compose -f docker-composer.test.yml down
+```
+
+> try => some container using it.
+
+```sh
+$ docker-compose -f docker-composer.test.yml up --build --abort-on-container-exit --exit-code-from it_tests
+[+] Building 0.1s (6/6) FINISHED                                                                                              
+ => [internal] load build definition from Dockerfile.test                                                                0.0s
+ => => transferring dockerfile: 179B                                                                                     0.0s
+ => [internal] load .dockerignore                                                                                        0.0s
+ => => transferring context: 2B                                                                                          0.0s
+ => [internal] load metadata for docker.io/library/golang:1.19-alpine                                                    0.0s
+ => [1/2] FROM docker.io/library/golang:1.19-alpine                                                                      0.0s
+ => CACHED [2/2] WORKDIR /go/src/target                                                                                  0.0s
+ => exporting to image                                                                                                   0.0s
+ => => exporting layers                                                                                                  0.0s
+ => => writing image sha256:34a0f43c68f82c949b8e1de7ae13c38891bf0cf44f421c15f761a16deba98ed7                             0.0s
+ => => naming to docker.io/library/assessment-it_tests                                                                   0.0s
+[+] Running 3/2
+ ⠿ Network assessment_integration-test-example  Created                                                                  0.1s
+ ⠿ Container assessment-db-1                    Created                                                                  0.1s
+ ⠿ Container assessment-it_tests-1              Created                                                                  0.0s
+Attaching to assessment-db-1, assessment-it_tests-1
+Error response from daemon: driver failed programming external connectivity on endpoint assessment-db-1 (06893cc1deac64f24af519f03dd479e6c74d871d764c224e0efbfcc2be0bbaae): Bind for 0.0.0.0:5432 failed: port is already allocated
+```
+
+> find and stop it
+
+```sh
+$ docker ps --all | grep 5432
+
+$ docker stop <container-name>
+```
+
+> run docker-compose up again!!
+>
+> Stop: run down before run up
+
+```sh
+$ docker-compose -f docker-composer.test.yml down
+$ docker-compose -f docker-composer.test.yml up --build --abort-on-container-exit --exit-code-from it_tests
+# ...
+assessment-it_tests-1  | go: downloading golang.org/x/sys v0.3.0
+assessment-it_tests-1  | go: downloading golang.org/x/text v0.5.0
+assessment-it_tests-1  | ?      github.com/BBBunnyDefi/assessment       [no test files]
+assessment-it_tests-1  | ok     github.com/BBBunnyDefi/assessment/rest/expenses 0.011s
+assessment-it_tests-1 exited with code 0
+Aborting on container exit...
+[+] Running 2/2
+ ⠿ Container assessment-it_tests-1  Stopped                                                                                                 0.0s
+ ⠿ Container assessment-db-1        Stopped       
+```
+
+> let's test func CreateExpensesHandler to database
+>
+> Step 1: start postgres:12.12 database
+>
+> Step 2: start server
+>
+> Step 3: use Thunder Client POST with Body (EXP01: POST /expenses - with json body)
+
+```sh
+$ docker start assessment-db-1
+$ make server
+# ... test it
+```
+
+## next to Story: EXP02 for getting data
+
+> create branch EXP02
