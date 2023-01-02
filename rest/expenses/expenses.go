@@ -35,20 +35,20 @@ func (e *expenses) HealthHandler(c echo.Context) error {
 // EXP01: POST /expenses - with json body
 func (e *expenses) CreateExpensesHandler(c echo.Context) error {
 	// Query all
-	exps := Expenses{}
-	err := c.Bind(&exps)
+	exp := Expenses{}
+	err := c.Bind(&exp)
 	if err != nil {
 		// log.Fatal("can't insert data", err)
 		return c.JSON(http.StatusBadRequest, Err{Message: "can't Bind : " + err.Error()})
 	}
 
-	// fmt.Println("##### dump pq.Array(exps.Tags) #####")
-	// fmt.Printf("%T\n", pq.Array(exps.Tags))
-	// fmt.Println(pq.Array(exps.Tags))
-	// fmt.Println("##### dump pq.Array(exps.Tags) #####")
+	// fmt.Println("##### dump pq.Array(exp.Tags) #####")
+	// fmt.Printf("%T\n", pq.Array(exp.Tags))
+	// fmt.Println(pq.Array(exp.Tags))
+	// fmt.Println("##### dump pq.Array(exp.Tags) #####")
 
-	row := e.DB.QueryRow("INSERT INTO expenses (title, amount, note, tags) VALUES ($1, $2, $3, $4) RETURNING id", exps.Title, exps.Amount, exps.Note, pq.Array(exps.Tags))
-	err = row.Scan(&exps.ID)
+	row := e.DB.QueryRow("INSERT INTO expenses (title, amount, note, tags) VALUES ($1, $2, $3, $4) RETURNING id", exp.Title, exp.Amount, exp.Note, pq.Array(exp.Tags))
+	err = row.Scan(&exp.ID)
 
 	// fmt.Println(exps)
 
@@ -56,5 +56,36 @@ func (e *expenses) CreateExpensesHandler(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, Err{Message: "can't scan : " + err.Error()})
 	}
 
-	return c.JSON(http.StatusCreated, exps)
+	return c.JSON(http.StatusCreated, exp)
+}
+
+// EXP02: GET /expenses/:id
+func (e *expenses) GetExpensesHandler(c echo.Context) error {
+	// Query one
+	stmt, err := e.DB.Prepare("SELECT id, title, amount, note, tags FROM expenses WHERE id=$1")
+	// fmt.Println(c)
+	rowId := c.Param("id")
+
+	if err != nil {
+		// log.Fatal("can't prepare query statement:", err)
+		return c.JSON(http.StatusInternalServerError, Err{Message: "can't prepare query statment with id: " + err.Error()})
+	}
+
+	row := stmt.QueryRow(rowId)
+	// var u User
+	exp := Expenses{}
+	// pq.StringArray
+	// pq.Array(exp.Tags)
+	err = row.Scan(&exp.ID, &exp.Title, &exp.Amount, &exp.Note, pq.Array(&exp.Tags))
+
+	// fmt.Println(exp)
+
+	switch err {
+	case sql.ErrNoRows:
+		return c.JSON(http.StatusNotFound, Err{Message: "expenses not found" + err.Error()})
+	case nil:
+		return c.JSON(http.StatusOK, exp)
+	default:
+		return c.JSON(http.StatusInternalServerError, Err{Message: "can't scan : " + err.Error()})
+	}
 }
