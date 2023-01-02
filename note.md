@@ -180,3 +180,20 @@ $ go test -v ./...
 PASS
 ok      github.com/BBBunnyDefi/assessment/rest/expenses (cached)
 ```
+
+> switch to main branch and use 3 ways merge --no-ff
+
+```sh
+$ git switch main
+$ git merge --no-ff EXP01
+# :wq
+Merge made by the 'ort' strategy.
+ go.mod                         |  10 +++++++++-
+ go.sum                         |  11 +++++++++++
+ note.md                        |  18 +++++++++++++++++
+ rest/expenses/expenses.go      |  28 ++++++++++++++++++++++++++
+ rest/expenses/expenses_test.go | 120 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ server.go                      |   1 +
+ 6 files changed, 187 insertions(+), 1 deletion(-)
+```
+

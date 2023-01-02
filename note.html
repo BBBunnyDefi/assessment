@@ -514,6 +514,36 @@ expenses
                                 at assertion:0 <span class="hljs-keyword">in</span> <span class="hljs-built_in">test</span>-script                                                                            
                                 inside <span class="hljs-string">"Bonus middleware check Autorization"</span>          
 </div></code></pre>
+<h2 id="create-branch-exp01">create branch EXP01</h2>
+<blockquote>
+<p><code>expenses.go</code>, <code>expenses_test.go</code></p>
+<p>run test =&gt; pass</p>
+</blockquote>
+<pre class="hljs"><code><div>$ go <span class="hljs-built_in">test</span> -v ./...
+?       github.com/BBBunnyDefi/assessment       [no <span class="hljs-built_in">test</span> files]
+=== RUN   TestHealthHandler
+--- PASS: TestHealthHandler (0.00s)
+=== RUN   TestCreateExpensesHandler
+    expenses_test.go:40: EXP01: POST /expenses - with json body  COMPLETED!!
+--- PASS: TestCreateExpensesHandler (0.00s)
+PASS
+ok      github.com/BBBunnyDefi/assessment/rest/expenses (cached)
+</div></code></pre>
+<blockquote>
+<p>switch to main branch and use 3 ways merge --no-ff</p>
+</blockquote>
+<pre class="hljs"><code><div>$ git switch main
+$ git merge --no-ff EXP01
+<span class="hljs-comment"># :wq</span>
+Merge made by the <span class="hljs-string">'ort'</span> strategy.
+ go.mod                         |  10 +++++++++-
+ go.sum                         |  11 +++++++++++
+ note.md                        |  18 +++++++++++++++++
+ rest/expenses/expenses.go      |  28 ++++++++++++++++++++++++++
+ rest/expenses/expenses_test.go | 120 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ server.go                      |   1 +
+ 6 files changed, 187 insertions(+), 1 deletion(-)
+</div></code></pre>
 
 </body>
 </html>
