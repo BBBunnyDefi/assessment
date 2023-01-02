@@ -470,3 +470,43 @@ expenses
 ```
 
 > ok, not bad
+
+## 3-way merge ?
+
+```sh
+* 72c38f6 (HEAD -> main, origin/main, origin/HEAD) update note.md
+* 9690434 update note.md
+*   1c9ee3f Merge branch 'EXP02'
+|\  
+| * 84c955c (EXP02) update note.md
+| * 63e1be3 add router GetExpensesHandler
+| * 18abf27 create func TestGetExpensesHandler
+| * 49d8252 create func GetExpensesHandler
+|/  
+* 7565c00 update progress to note.md
+* 1b56b19 delete note.html
+* 89f071b create sample integration test but no connection to database
+* a069abd update db connection
+* 1009720 update note.md
+*   e5caf1c Merge branch 'EXP01'
+|\  
+| * ada111c (EXP01) update note.md
+| * d8c505d create func CreateExpensesHandler & TestCreateExpensesHandler
+| * 023d119 create test TestHealthHandler
+|/  
+* 88bacf1 update Makefile for run env PORT & DATABASE_URL
+* dd553d9 update important files for build system
+* dc3ba56 create Makefile
+* b7e195e implement graceful shutdown
+* 38c09ac create simple server
+* 4cf9280 create expenses struct & handler
+* 44a1d61 create project structure
+* e873bfb just empty note.md
+* a9f8b14 update readme
+* 69aa9a1 update readme
+* 2fdcad7 update readme
+* 97a1c87 update readme
+* ef2c1df add postmand collection
+* 9d27b30 update readme
+* 4ad3956 base project
+```
