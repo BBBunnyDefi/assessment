@@ -27,6 +27,8 @@ func main() {
 	e.GET("/", h.HealthHandler)
 	// EXP01: POST /expenses - with json body
 	e.POST("/expenses", h.CreateExpensesHandler)
+	// EXP02: GET /expenses/:id
+	e.GET("/expenses/:id", h.GetExpensesHandler)
 
 	// implement graceful shutdown
 	// https://echo.labstack.com/cookbook/graceful-shutdown/
