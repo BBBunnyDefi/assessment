@@ -162,3 +162,21 @@ expenses
                                 at assertion:0 in test-script                                                                            
                                 inside "Bonus middleware check Autorization"          
 ```
+
+## create branch EXP01
+
+> `expenses.go`, `expenses_test.go`
+>
+> run test => pass
+
+```sh
+$ go test -v ./...
+?       github.com/BBBunnyDefi/assessment       [no test files]
+=== RUN   TestHealthHandler
+--- PASS: TestHealthHandler (0.00s)
+=== RUN   TestCreateExpensesHandler
+    expenses_test.go:40: EXP01: POST /expenses - with json body  COMPLETED!!
+--- PASS: TestCreateExpensesHandler (0.00s)
+PASS
+ok      github.com/BBBunnyDefi/assessment/rest/expenses (cached)
+```
