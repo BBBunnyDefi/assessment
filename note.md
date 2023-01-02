@@ -285,3 +285,72 @@ $ make server
 ## next to Story: EXP02 for getting data
 
 > create branch EXP02
+
+> update `server.go`, `expenses.go`, `expenses_test.go`
+>
+> try test
+
+```sh
+$ go test -v --tags=unit ./...
+?       github.com/BBBunnyDefi/assessment       [no test files]
+=== RUN   TestHealthHandler
+--- PASS: TestHealthHandler (0.00s)
+=== RUN   TestCreateExpensesHandler
+    expenses_test.go:43: EXP01: POST /expenses - with json body  COMPLETED!!
+--- PASS: TestCreateExpensesHandler (0.00s)
+=== RUN   TestGetExpensesHandler
+    expenses_test.go:128: EXP02: GET /expenses/:id COMPLETED!!
+--- PASS: TestGetExpensesHandler (0.00s)
+PASS
+ok      github.com/BBBunnyDefi/assessment/rest/expenses (cached)
+```
+
+> but try to fail
+
+```sh
+$ go test -v --tags=unit ./...
+?       github.com/BBBunnyDefi/assessment       [no test files]
+=== RUN   TestHealthHandler
+--- PASS: TestHealthHandler (0.00s)
+=== RUN   TestCreateExpensesHandler
+    expenses_test.go:43: EXP01: POST /expenses - with json body  COMPLETED!!
+--- PASS: TestCreateExpensesHandler (0.00s)
+=== RUN   TestGetExpensesHandler
+    expenses_test.go:128: EXP02: GET /expenses/:id COMPLETED!!
+    expenses_test.go:233: 
+                Error Trace:    /Users/bunny/Learns/kbtg/production-assessment/assessment/rest/expenses/expenses_test.go:233
+                Error:          Not equal: 
+                                expected: "{\"id\":1,\"title\":\"apple smoothie1\",\"amount\":89,\"note\":\"no discount\",\"tags\":[\"beverage\"]}"
+                                actual  : "{\"id\":1,\"title\":\"apple smoothie\",\"amount\":89,\"note\":\"no discount\",\"tags\":[\"beverage\"]}"
+                            
+                                Diff:
+                                --- Expected
+                                +++ Actual
+                                @@ -1 +1 @@
+                                -{"id":1,"title":"apple smoothie1","amount":89,"note":"no discount","tags":["beverage"]}
+                                +{"id":1,"title":"apple smoothie","amount":89,"note":"no discount","tags":["beverage"]}
+                Test:           TestGetExpensesHandler
+--- FAIL: TestGetExpensesHandler (0.00s)
+FAIL
+FAIL    github.com/BBBunnyDefi/assessment/rest/expenses 0.925s
+FAIL
+```
+
+> ok, rollback
+
+```sh
+$ go test -v --tags=unit ./...
+?       github.com/BBBunnyDefi/assessment       [no test files]
+=== RUN   TestHealthHandler
+--- PASS: TestHealthHandler (0.00s)
+=== RUN   TestCreateExpensesHandler
+    expenses_test.go:43: EXP01: POST /expenses - with json body  COMPLETED!!
+--- PASS: TestCreateExpensesHandler (0.00s)
+=== RUN   TestGetExpensesHandler
+    expenses_test.go:128: EXP02: GET /expenses/:id COMPLETED!!
+--- PASS: TestGetExpensesHandler (0.00s)
+PASS
+ok      github.com/BBBunnyDefi/assessment/rest/expenses (cached)
+```
+
+> test with Thunder Client [EXP01 - EXP02]
