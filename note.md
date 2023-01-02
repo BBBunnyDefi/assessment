@@ -373,3 +373,100 @@ Merge made by the 'ort' strategy.
 
 ![01 Git Graph](img/01-git-graph.png)
 
+## test postman collection again
+
+> run server & run newman
+
+```sh
+$ make server
+```
+
+```sh
+$ newman run expenses.postman_collection.json
+newman
+
+expenses
+
+→ create expense
+  POST http://localhost:2565/expenses [201 Created, 256B, 56ms]
+  ┌
+  │ {
+  │   id: 4,
+  │   title: 'strawberry smoothie',
+  │   amount: 79,
+  │   note: 'night market promotion discount 10 bath',
+  │   tags: [ 'food', 'beverage' ]
+  │ }
+  └
+  ✓  should response success(201) and object of customer
+  ✓  Status code is 201 or 202
+
+→ get latest expense (expenses/:id)
+  GET http://localhost:2565/expenses/4 [200 OK, 251B, 10ms]
+  ✓  Status code is 200
+  ✓  should response object of latest expense
+
+→ update latest expenses
+  PUT http://localhost:2565/expenses/4 [405 Method Not Allowed, 193B, 5ms]
+  1. Status code is 200
+  2. should response success(200) and object of customer
+
+→ get all expenses
+  GET http://localhost:2565/expenses [405 Method Not Allowed, 194B, 4ms]
+  3. Status code is 200
+  4. should response success(200) and object of latest expense
+
+→ Bonus middleware check Autorization
+  GET http://localhost:2565/expenses [405 Method Not Allowed, 194B, 3ms]
+  5. Status code is 401 Unauthorized
+
+┌─────────────────────────┬──────────────────┬──────────────────┐
+│                         │         executed │           failed │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│              iterations │                1 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│                requests │                5 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│            test-scripts │                5 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│      prerequest-scripts │                0 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│              assertions │                9 │                5 │
+├─────────────────────────┴──────────────────┴──────────────────┤
+│ total run duration: 210ms                                     │
+├───────────────────────────────────────────────────────────────┤
+│ total data received: 353B (approx)                            │
+├───────────────────────────────────────────────────────────────┤
+│ average response time: 15ms [min: 3ms, max: 56ms, s.d.: 20ms] │
+└───────────────────────────────────────────────────────────────┘
+
+  #  failure           detail                                                              
+                                                                                           
+ 1.  AssertionError    Status code is 200                                                  
+                       expected response to have status code 200 but got 405               
+                       at assertion:0 in test-script                                       
+                       inside "update latest expenses"                                     
+                                                                                           
+ 2.  TypeError         should response success(200) and object of customer                 
+                       Cannot read properties of undefined (reading 'toString')            
+                       at assertion:1 in test-script                                       
+                       inside "update latest expenses"                                     
+                                                                                           
+ 3.  AssertionError    Status code is 200                                                  
+                       expected response to have status code 200 but got 405               
+                       at assertion:0 in test-script                                       
+                       inside "get all expenses"                                           
+                                                                                           
+ 4.  AssertionError    should response success(200) and object of latest expense           
+                       expenses should not be empty: expected undefined to be a number or  
+                       a date                                                              
+                       at assertion:1 in test-script                                       
+                       inside "get all expenses"                                           
+                                                                                           
+ 5.  AssertionError    Status code is 401 Unauthorized                                     
+                       expected response to have status code 401 but got 405               
+                       at assertion:0 in test-script                                       
+                       inside "Bonus middleware check Autorization"   
+```
+
+> ok, not bad
