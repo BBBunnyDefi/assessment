@@ -734,3 +734,24 @@ expenses
                            at assertion:0 in test-script                                                        
                            inside "Bonus middleware check Autorization"  
 ```
+
+> merge EXP04 to main
+
+```sh
+$ git switch main
+Switched to branch 'main'
+Your branch is up to date with 'origin/main'.
+
+$ git merge --no-ff EXP04
+Merge made by the 'ort' strategy.
+ Makefile                       |   8 ++++-
+ note.md                        | 144 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ rest/expenses/expenses.go      |  31 +++++++++++++++++
+ rest/expenses/expenses_test.go |  42 +++++++++++++++++++++++
+ server.go                      |   9 +++++
+ 5 files changed, 233 insertions(+), 1 deletion(-)
+```
+
+> after merge to main 
+> 
+> test all again and ok
