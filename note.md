@@ -758,3 +758,100 @@ Merge made by the 'ort' strategy.
 
 ## implement integration tests
 
+> create branch for dev integration tests (DevIT)
+
+> first: simple test for pass
+
+```sql
+-- 01-init.sql
+-- add data for test
+INSERT INTO "expenses" ("id", "title", "amount", "note", "tags") VALUES (1, 'strawberry smoothie', 79, 'night market promotion discount 10 bath', '{"food","beverage"}');
+```
+
+```go
+// create func TestITGetExpensesHandler for check equal
+// ...
+expected := "{\"id\":1,\"title\":\"strawberry smoothie\",\"amount\":79,\"note\":\"night market promotion discount 10 bath\",\"tags\":[\"food\",\"beverage\"]}"
+// ...
+```
+
+> run pass
+
+```sh
+# pass
+# ...
+assessment-db-1        | PostgreSQL init process complete; ready for start up.
+assessment-db-1        | 
+assessment-db-1        | 2023-01-03 16:14:10.622 UTC [1] LOG:  starting PostgreSQL 12.12 (Debian 12.12-1.pgdg110+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 10.2.1-6) 10.2.1 20210110, 64-bit
+assessment-db-1        | 2023-01-03 16:14:10.622 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+assessment-db-1        | 2023-01-03 16:14:10.622 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+assessment-db-1        | 2023-01-03 16:14:10.629 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+assessment-db-1        | 2023-01-03 16:14:10.648 UTC [84] LOG:  database system was shut down at 2023-01-03 16:14:10 UTC
+assessment-db-1        | 2023-01-03 16:14:10.654 UTC [1] LOG:  database system is ready to accept connections
+assessment-it_tests-1  | go: downloading golang.org/x/net v0.4.0
+assessment-it_tests-1  | go: downloading github.com/golang-jwt/jwt v3.2.2+incompatible
+assessment-it_tests-1  | go: downloading github.com/valyala/fasttemplate v1.2.2
+assessment-it_tests-1  | go: downloading golang.org/x/time v0.2.0
+assessment-it_tests-1  | go: downloading github.com/mattn/go-colorable v0.1.13
+assessment-it_tests-1  | go: downloading github.com/mattn/go-isatty v0.0.16
+assessment-it_tests-1  | go: downloading github.com/valyala/bytebufferpool v1.0.0
+assessment-it_tests-1  | go: downloading golang.org/x/text v0.5.0
+assessment-it_tests-1  | go: downloading golang.org/x/sys v0.3.0
+assessment-it_tests-1  | ?      github.com/BBBunnyDefi/assessment       [no test files]
+assessment-it_tests-1  | ok     github.com/BBBunnyDefi/assessment/rest/expenses 0.020s
+assessment-it_tests-1 exited with code 0
+Aborting on container exit...
+[+] Running 2/2
+ ⠿ Container assessment-it_tests-1  Stopped                                                                                         0.0s
+ ⠿ Container assessment-db-1        Stopped   
+```
+
+> test error
+
+```go
+// create func TestITGetExpensesHandler for check equal
+// ...
+expected := "{\"id\":1,\"title\":\"strawberry smoothie1\",\"amount\":79,\"note\":\"night market promotion discount 10 bath\",\"tags\":[\"food\",\"beverage\"]}"
+// ...
+```
+
+```sh
+# fail
+# ...
+assessment-it_tests-1  |    ____    __
+assessment-it_tests-1  |   / __/___/ /  ___
+assessment-it_tests-1  |  / _// __/ _ \/ _ \
+assessment-it_tests-1  | /___/\__/_//_/\___/ v4.10.0
+assessment-it_tests-1  | High performance, minimalist Go web framework
+assessment-it_tests-1  | https://echo.labstack.com
+assessment-it_tests-1  | ____________________________________O/_______
+assessment-it_tests-1  |                                     O\
+assessment-it_tests-1  | ⇨ http server started on [::]:80
+assessment-it_tests-1  | 2023/01/03 16:12:12 dial tcp 127.0.0.1:80: connect: connection refused
+assessment-it_tests-1  | --- FAIL: TestITGetExpensesHandler (0.01s)
+assessment-it_tests-1  |     expenses_integration_test.go:79: TODO: implement integration EXP02 GET /expenses/:id
+assessment-it_tests-1  |     expenses_integration_test.go:143: 
+assessment-it_tests-1  |                Error Trace:    /go/src/target/rest/expenses/expenses_integration_test.go:143
+assessment-it_tests-1  |                Error:          Not equal: 
+assessment-it_tests-1  |                                expected: "{\"id\":1,\"title\":\"strawberry smoothie1\",\"amount\":79,\"note\":\"night market promotion discount 10 bath\",\"tags\":[\"food\",\"beverage\"]}"
+assessment-it_tests-1  |                                actual  : "{\"id\":1,\"title\":\"strawberry smoothie\",\"amount\":79,\"note\":\"night market promotion discount 10 bath\",\"tags\":[\"food\",\"beverage\"]}"
+assessment-it_tests-1  |                            
+assessment-it_tests-1  |                                Diff:
+assessment-it_tests-1  |                                --- Expected
+assessment-it_tests-1  |                                +++ Actual
+assessment-it_tests-1  |                                @@ -1 +1 @@
+assessment-it_tests-1  |                                -{"id":1,"title":"strawberry smoothie1","amount":79,"note":"night market promotion discount 10 bath","tags":["food","beverage"]}
+assessment-it_tests-1  |                                +{"id":1,"title":"strawberry smoothie","amount":79,"note":"night market promotion discount 10 bath","tags":["food","beverage"]}
+assessment-it_tests-1  |                Test:           TestITGetExpensesHandler
+assessment-it_tests-1  | FAIL
+assessment-it_tests-1  | FAIL   github.com/BBBunnyDefi/assessment/rest/expenses 0.025s
+assessment-it_tests-1  | FAIL
+assessment-it_tests-1 exited with code 1
+Aborting on container exit...
+[+] Running 2/2
+ ⠿ Container assessment-it_tests-1  Stopped                                                                                         0.0s
+ ⠿ Container assessment-db-1        Stopped                                                                                         0.3s
+make: *** [cup] Error 1
+```
+
+> !!! 4 days
