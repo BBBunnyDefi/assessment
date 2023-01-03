@@ -12,3 +12,9 @@ dbstart:
 
 dbstop:
 	docker stop assessment-db-1
+
+composeup:
+	docker-compose -f docker-composer.test.yml up --build --abort-on-container-exit --exit-code-from it_tests
+
+composedown:
+	docker-compose -f docker-composer.test.yml down
