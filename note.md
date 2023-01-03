@@ -549,3 +549,22 @@ $ go test -v --tags=unit ./...
 FAIL
 FAIL    github.com/BBBunnyDefi/assessment/rest/expenses 1.214s
 FAIL
+```
+
+## commit & merge EXP03
+
+> switch to main branch and use 3 ways merge --no-ff
+
+```sh
+$ git switch main
+Switched to branch 'main'
+Your branch is up to date with 'origin/main'.
+
+$ git merge --no-ff EXP03
+Merge made by the 'ort' strategy.
+ note.md                        |  48 +++++++++++++++++++++++++++++++++++++++-
+ rest/expenses/expenses.go      |  30 +++++++++++++++++++++++++
+ rest/expenses/expenses_test.go | 152 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ server.go                      |   2 ++
+ 4 files changed, 231 insertions(+), 1 deletion(-)
+```
