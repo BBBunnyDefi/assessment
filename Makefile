@@ -6,3 +6,9 @@ unittest:
 
 ittest:
 	go test -v --tags=integration ./...
+
+dbstart:
+	docker start assessment-db-1
+
+dbstop:
+	docker stop assessment-db-1
