@@ -2,7 +2,9 @@ package expenses
 
 import (
 	"database/sql"
+	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 	"github.com/lib/pq"
@@ -88,4 +90,33 @@ func (e *expenses) GetExpensesHandler(c echo.Context) error {
 	default:
 		return c.JSON(http.StatusInternalServerError, Err{Message: "can't scan : " + err.Error()})
 	}
+}
+
+// EXP03: PUT /expenses/:id - with json body
+func (e *expenses) UpdateExpensesHandler(c echo.Context) error {
+	stmt, err := e.DB.Prepare("UPDATE expenses SET title=$2, amount=$3, note=$4, tags=$5 WHERE id=$1")
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, Err{Message: "can't prepare update statment: " + err.Error()})
+	}
+
+	rowId := c.Param("id")
+	rowIdInt, _ := strconv.Atoi(rowId)
+
+	exp := Expenses{
+		ID: rowIdInt,
+	}
+	err = c.Bind(&exp)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, Err{Message: "can't bind param expenses: " + err.Error()})
+	}
+
+	// fmt.Println(pq.Array(&exp.Tags))
+	fmt.Println(&exp)
+
+	_, err = stmt.Exec(rowId, &exp.Title, &exp.Amount, &exp.Note, pq.Array(&exp.Tags))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, Err{Message: "can't execute expenses: " + err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, exp)
 }
