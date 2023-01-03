@@ -29,6 +29,8 @@ func main() {
 	e.POST("/expenses", h.CreateExpensesHandler)
 	// EXP02: GET /expenses/:id
 	e.GET("/expenses/:id", h.GetExpensesHandler)
+	// EXP03: PUT /expenses/:id - with json body
+	e.PUT("/expenses/:id", h.UpdateExpensesHandler)
 
 	// implement graceful shutdown
 	// https://echo.labstack.com/cookbook/graceful-shutdown/
