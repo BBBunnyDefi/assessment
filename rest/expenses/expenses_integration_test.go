@@ -23,7 +23,7 @@ import (
 // PORT & DATABASE_URL
 const serverPort = 80
 
-// const databaseURL = "postgres://root:root@db/assessment?sslmode=disable"
+const databaseURL = "postgres://root:root@db/assessment?sslmode=disable"
 
 func TestITHealthHandler(t *testing.T) {
 	// t.Skip("TODO: implement integration Health GET /")
