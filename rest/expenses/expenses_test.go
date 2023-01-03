@@ -385,3 +385,45 @@ func TestUpdateExpensesHandler(t *testing.T) {
 		assert.Equal(t, expected, strings.TrimSpace(rec.Body.String()))
 	}
 }
+
+func TestGetAllExpensesHandler(t *testing.T) {
+	// t.Skip("TODO: EXP04: GET /expenses")
+	t.Log("EXP04: GET /expenses COMPLETED!!")
+	// Arrange
+	e := echo.New()
+
+	req := httptest.NewRequest(http.MethodGet, "/expenses", strings.NewReader(""))
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	rec := httptest.NewRecorder()
+
+	// create new sqlmock
+	db, mock, err := sqlmock.New()
+	newMockRows := sqlmock.NewRows([]string{"id", "title", "amount", "note", "tags"}).
+		AddRow(1, "apple smoothie", 89, "no discount", pq.Array([]string{"beverage"})).
+		AddRow(2, "iPhone 14 Pro Max 1TB", 66900, "birthday gift from my love", pq.Array([]string{"gadget"}))
+
+	mock.ExpectPrepare("SELECT id, title, amount, note, tags FROM expenses").
+		ExpectQuery().
+		WillReturnRows(newMockRows)
+
+	if err != nil {
+		t.Fatalf("an error, mock expect query '%s' was not...", err)
+	}
+
+	h := expenses{db}
+	c := e.NewContext(req, rec)
+	// Epected
+	expected := "[{\"id\":1,\"title\":\"apple smoothie\",\"amount\":89,\"note\":\"no discount\",\"tags\":[\"beverage\"]},{\"id\":2,\"title\":\"iPhone 14 Pro Max 1TB\",\"amount\":66900,\"note\":\"birthday gift from my love\",\"tags\":[\"gadget\"]}]"
+
+	// Act
+	err = h.GetAllExpensesHandler(c)
+	if err != nil {
+		t.Fatalf("an error, act '%s' was not...", err)
+	}
+
+	// Assertions
+	if assert.NoError(t, err) {
+		assert.Equal(t, http.StatusOK, rec.Code)
+		assert.Equal(t, expected, strings.TrimSpace(rec.Body.String()))
+	}
+}

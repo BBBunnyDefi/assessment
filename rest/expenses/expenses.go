@@ -119,3 +119,34 @@ func (e *expenses) UpdateExpensesHandler(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, exp)
 }
+
+// EXP04: GET /expenses
+func (e *expenses) GetAllExpensesHandler(c echo.Context) error {
+	// Query all
+	stmt, err := e.DB.Prepare("SELECT id, title, amount, note, tags FROM expenses")
+	if err != nil {
+		// log.Fatal("can't prepare query all users statement:", err)
+		return c.JSON(http.StatusInternalServerError, Err{Message: "can't prepare query all expenses statment: " + err.Error()})
+	}
+
+	rows, err := stmt.Query()
+	if err != nil {
+		// log.Fatal("can't query all ", err)
+		return c.JSON(http.StatusInternalServerError, Err{Message: "can't query all expenses: " + err.Error()})
+	}
+
+	// loop query all
+	expenses := []Expenses{}
+	for rows.Next() {
+		exps := Expenses{}
+		err := rows.Scan(&exps.ID, &exps.Title, &exps.Amount, &exps.Note, pq.Array(&exps.Tags))
+		if err != nil {
+			// log.Fatal("can't Scan row into variable", err)
+			return c.JSON(http.StatusInternalServerError, Err{Message: "can't scan : " + err.Error()})
+		}
+
+		expenses = append(expenses, exps)
+	}
+
+	return c.JSON(http.StatusOK, expenses)
+}

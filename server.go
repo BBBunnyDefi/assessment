@@ -31,6 +31,15 @@ func main() {
 	e.GET("/expenses/:id", h.GetExpensesHandler)
 	// EXP03: PUT /expenses/:id - with json body
 	e.PUT("/expenses/:id", h.UpdateExpensesHandler)
+	// EXP04: GET /expenses
+	e.GET("/expenses", h.GetAllExpensesHandler)
+
+	// Bonus middleware check Autorization
+	// EXP04: GET /expenses
+	// http://localhost:2565/expenses
+	// - Autorization: November 10, 2009wrong_token ?
+	// Note: other story
+	// - Autorization: November 10, 2009
 
 	// implement graceful shutdown
 	// https://echo.labstack.com/cookbook/graceful-shutdown/

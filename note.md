@@ -590,3 +590,147 @@ remote: Resolving deltas: 100% (17/17), completed with 6 local objects.
 To https://github.com/BBBunnyDefi/assessment.git
    e0fdd4e..d38c9c6  main -> main
 ```
+
+## next to Story: EXP04 for get all data
+
+> create branch EXP04
+
+```sh
+$ git checkout -b EXP04
+Switched to a new branch 'EXP04'
+
+$ git branch
+  EXP01
+  EXP02
+  EXP03
+* EXP04
+  main
+(END)
+# q
+```
+
+> update  `server.go`, `expenses.go`, `expenses_test.go`
+> 
+> setup commend `Makefile`
+>
+> test all: before merge to main branch 
+> - story by Thunder Client
+> - unittest(EXP03-Skip)
+> - integration tests(no connect database)
+> - postman collection tests
+
+> unittest
+
+```sh
+make unittest
+go test -v --tags=unit ./...
+?       github.com/BBBunnyDefi/assessment       [no test files]
+=== RUN   TestHealthHandler
+--- PASS: TestHealthHandler (0.00s)
+=== RUN   TestCreateExpensesHandler
+    expenses_test.go:43: EXP01: POST /expenses - with json body  COMPLETED!!
+--- PASS: TestCreateExpensesHandler (0.00s)
+=== RUN   TestGetExpensesHandler
+    expenses_test.go:128: EXP02: GET /expenses/:id COMPLETED!!
+--- PASS: TestGetExpensesHandler (0.00s)
+=== RUN   TestUpdateExpensesHandler
+    expenses_test.go:238: TODO: EXP03: PUT /expenses/:id - with json body FAILED!!
+--- SKIP: TestUpdateExpensesHandler (0.00s)
+=== RUN   TestGetAllExpensesHandler
+    expenses_test.go:391: EXP04: GET /expenses COMPLETED!!
+--- PASS: TestGetAllExpensesHandler (0.00s)
+PASS
+ok      github.com/BBBunnyDefi/assessment/rest/expenses (cached)
+```
+
+> integration test
+
+```sh
+$ make ittest
+go test -v --tags=integration ./...
+?       github.com/BBBunnyDefi/assessment       [no test files]
+=== RUN   TestITHealthHandler
+    expenses_integration_test.go:30: TODO: implement integration Health GET /
+
+   ____    __
+  / __/___/ /  ___
+ / _// __/ _ \/ _ \
+/___/\__/_//_/\___/ v4.10.0
+High performance, minimalist Go web framework
+https://echo.labstack.com
+____________________________________O/_______
+                                    O\
+⇨ http server started on [::]:80
+--- PASS: TestITHealthHandler (0.00s)
+PASS
+ok      github.com/BBBunnyDefi/assessment/rest/expenses (cached)
+```
+
+> run postman collection
+
+```sh
+$ newman run expenses.postman_collection.json
+newman
+
+expenses
+
+→ create expense
+  POST http://localhost:2565/expenses [201 Created, 257B, 57ms]
+  ┌
+  │ {
+  │   id: 10,
+  │   title: 'strawberry smoothie',
+  │   amount: 79,
+  │   note: 'night market promotion discount 10 bath',
+  │   tags: [ 'food', 'beverage' ]
+  │ }
+  └
+  ✓  should response success(201) and object of customer
+  ✓  Status code is 201 or 202
+
+→ get latest expense (expenses/:id)
+  GET http://localhost:2565/expenses/10 [200 OK, 252B, 9ms]
+  ✓  Status code is 200
+  ✓  should response object of latest expense
+
+→ update latest expenses
+  PUT http://localhost:2565/expenses/10 [200 OK, 211B, 9ms]
+  ✓  Status code is 200
+  ✓  should response success(200) and object of customer
+
+→ get all expenses
+  GET http://localhost:2565/expenses [200 OK, 1.21kB, 9ms]
+  ✓  Status code is 200
+  ✓  should response success(200) and object of latest expense
+
+→ Bonus middleware check Autorization
+  GET http://localhost:2565/expenses [200 OK, 1.21kB, 7ms]
+  1. Status code is 401 Unauthorized
+
+┌─────────────────────────┬──────────────────┬──────────────────┐
+│                         │         executed │           failed │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│              iterations │                1 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│                requests │                5 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│            test-scripts │                5 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│      prerequest-scripts │                0 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│              assertions │                9 │                1 │
+├─────────────────────────┴──────────────────┴──────────────────┤
+│ total run duration: 219ms                                     │
+├───────────────────────────────────────────────────────────────┤
+│ total data received: 2.51kB (approx)                          │
+├───────────────────────────────────────────────────────────────┤
+│ average response time: 18ms [min: 7ms, max: 57ms, s.d.: 19ms] │
+└───────────────────────────────────────────────────────────────┘
+
+  #  failure               detail                                                                               
+                                                                                                                
+ 1.  AssertionError        Status code is 401 Unauthorized                                                      
+                           expected response to have status code 401 but got 200                                
+                           at assertion:0 in test-script                                                        
+                           inside "Bonus middleware check Autorization"  
+```
