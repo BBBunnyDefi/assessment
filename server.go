@@ -15,10 +15,6 @@ import (
 )
 
 func main() {
-	fmt.Println("Please use server.go for main file")
-	fmt.Println("start at port:", os.Getenv("PORT"))
-	fmt.Println("docker database url:", os.Getenv("DATABASE_URL"))
-
 	h := expenses.NewApp(expenses.InitDB(os.Getenv("DATABASE_URL")))
 
 	e := echo.New()
@@ -41,8 +37,6 @@ func main() {
 	// Note: other story
 	// - Autorization: November 10, 2009
 
-	// implement graceful shutdown
-	// https://echo.labstack.com/cookbook/graceful-shutdown/
 	go func() {
 		if err := e.Start(os.Getenv("PORT")); err != nil && err != http.ErrServerClosed {
 			e.Logger.Fatal("shutting down the server")

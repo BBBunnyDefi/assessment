@@ -20,8 +20,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// Docker-Compose: run with integration tests
-// PORT & DATABASE_URL
 const serverPort = 80
 
 const databaseURL = "postgres://root:root@db/assessment?sslmode=disable"
@@ -30,7 +28,6 @@ func TestITHealthHandler(t *testing.T) {
 	// t.Skip("TODO: implement integration Health GET /")
 	t.Log("TODO: implement integration Health GET /")
 
-	// Setup server
 	eh := echo.New()
 	go func(e *echo.Echo) {
 		h := NewApp(nil)
@@ -48,14 +45,13 @@ func TestITHealthHandler(t *testing.T) {
 			break
 		}
 	}
-	// Arrange
+
 	reqBody := ``
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("http://localhost:%d/", serverPort), strings.NewReader(reqBody))
 	assert.NoError(t, err)
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	client := http.Client{}
 
-	// Act
 	resp, err := client.Do(req)
 	assert.NoError(t, err)
 
@@ -63,7 +59,6 @@ func TestITHealthHandler(t *testing.T) {
 	assert.NoError(t, err)
 	resp.Body.Close()
 
-	// Assertions
 	if assert.NoError(t, err) {
 		assert.Equal(t, http.StatusOK, resp.StatusCode)
 		assert.Equal(t, "Server health OKKK", string(byteBody))
@@ -78,7 +73,7 @@ func TestITHealthHandler(t *testing.T) {
 func TestITGetExpensesHandler(t *testing.T) {
 	t.Log("TODO: implement integration EXP02 GET /expenses/:id")
 	// t.Skip("TODO: implement integration EXP02 GET /expenses/:id")
-	// Setup server
+
 	eh := echo.New()
 	go func(e *echo.Echo) {
 		db, err := sql.Open("postgres", databaseURL)
@@ -101,28 +96,14 @@ func TestITGetExpensesHandler(t *testing.T) {
 			break
 		}
 	}
-	// Arrange
+
 	reqBody := ``
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("http://localhost:%d/expenses/1", serverPort), strings.NewReader(reqBody))
 	assert.NoError(t, err)
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 
-	// q := req.URL.Query()
-	// q.Add("id", "1")
-
-	// fmt.Println("##### dump q #####")
-	// fmt.Printf("%T\n", q)
-	// fmt.Println(q)
-	// fmt.Println("##### dump q #####")
-
 	client := http.Client{}
 
-	// fmt.Println("##### dump client #####")
-	// fmt.Printf("%T\n", client)
-	// fmt.Println(client)
-	// fmt.Println("##### dump client #####")
-
-	// Act
 	resp, err := client.Do(req)
 	assert.NoError(t, err)
 
@@ -130,12 +111,6 @@ func TestITGetExpensesHandler(t *testing.T) {
 	assert.NoError(t, err)
 	resp.Body.Close()
 
-	// fmt.Println("##### dump byteBody #####")
-	// fmt.Printf("%T\n", strings.TrimSpace(string(byteBody)))
-	// fmt.Println(strings.TrimSpace(string(byteBody)))
-	// fmt.Println("##### dump byteBody #####")
-
-	// Assertions
 	expected := "{\"id\":1,\"title\":\"strawberry smoothie\",\"amount\":79,\"note\":\"night market promotion discount 10 bath\",\"tags\":[\"food\",\"beverage\"]}"
 
 	if assert.NoError(t, err) {
