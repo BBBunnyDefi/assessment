@@ -568,3 +568,25 @@ Merge made by the 'ort' strategy.
  server.go                      |   2 ++
  4 files changed, 231 insertions(+), 1 deletion(-)
 ```
+
+> check status & push to repo
+
+```sh
+$ git status
+On branch main
+Your branch is ahead of 'origin/main' by 7 commits.
+  (use "git push" to publish your local commits)
+
+nothing to commit, working tree clean
+
+$ git push
+Enumerating objects: 33, done.
+Counting objects: 100% (33/33), done.
+Delta compression using up to 4 threads
+Compressing objects: 100% (23/23), done.
+Writing objects: 100% (26/26), 3.98 KiB | 1.99 MiB/s, done.
+Total 26 (delta 17), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (17/17), completed with 6 local objects.
+To https://github.com/BBBunnyDefi/assessment.git
+   e0fdd4e..d38c9c6  main -> main
+```
