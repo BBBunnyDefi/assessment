@@ -2,7 +2,6 @@ package expenses
 
 import (
 	"database/sql"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -111,7 +110,7 @@ func (e *expenses) UpdateExpensesHandler(c echo.Context) error {
 	}
 
 	// fmt.Println(pq.Array(&exp.Tags))
-	fmt.Println(&exp)
+	// fmt.Println(&exp)
 
 	_, err = stmt.Exec(rowId, &exp.Title, &exp.Amount, &exp.Note, pq.Array(&exp.Tags))
 	if err != nil {

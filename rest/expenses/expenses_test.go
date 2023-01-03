@@ -1,3 +1,6 @@
+//go:build unit
+// +build unit
+
 package expenses
 
 import (
@@ -269,31 +272,27 @@ func TestUpdateExpensesHandler(t *testing.T) {
 	// create new sqlmock
 	db, mock, err := sqlmock.New()
 
-	// mock.ExpectQuery("UPDATE expenses SET title=$2, amount=$3, note=$4, tags=$5 WHERE id=$1").
-	// 	WithArgs(1, exps.Title, exps.Amount, exps.Note, pq.Array(exps.Tags)).
-	// 	WillReturnRows(newMockRows)
-
-	// mock.ExpectQuery("UPDATE expenses SET").
-	// 	WithArgs(1, exps.Title, exps.Amount, exps.Note, pq.Array(exps.Tags)).
-	// 	WillReturnRows(newMockRows)
-
+	// Error: 500 Step Prepare: Error
 	// mock.ExpectPrepare("UPDATE expenses SET title=$2, amount=$3, note=$4, tags=$5 WHERE id=$1").
 	// 	ExpectQuery().
-	// 	WithArgs(1, exps.Title, exps.Amount, exps.Note, pq.Array(exps.Tags)).
+	// 	WithArgs("1", exps.Title, exps.Amount, exps.Note, pq.Array(exps.Tags)).
 	// 	WillReturnRows(newMockRows)
 
-	// --
-	// mock.ExpectPrepare("UPDATE expenses").
+	// Error: 400 Step Prepare: Pass, Step Exec: Error
+	// mock.ExpectPrepare("UPDATE expenses SET title=\\$2, amount=\\$3, note=\\$4, tags=\\$5 WHERE id=\\$1").
 	// 	ExpectQuery().
-	// 	WithArgs(1, exps.Title, exps.Amount, exps.Note, pq.Array(exps.Tags)).
+	// 	WithArgs("1", exps.Title, exps.Amount, exps.Note, pq.Array(exps.Tags)).
 	// 	WillReturnRows(newMockRows)
 
+	// Error: 400 Step Prepare: Pass, Step Exec: Error
 	mock.ExpectPrepare("UPDATE expenses").
 		ExpectQuery().
-		WithArgs(exps.Title, exps.Amount, exps.Note, pq.Array(exps.Tags)).
+		WithArgs("1", exps.Title, exps.Amount, exps.Note, pq.Array(exps.Tags)).
 		WillReturnRows(newMockRows)
 
-	// mock.ExpectQuery("UPDATE expenses").
+	// Error: 400
+	// mock.ExpectPrepare("UPDATE expenses").
+	// 	ExpectQuery().
 	// 	WithArgs(1, exps.Title, exps.Amount, exps.Note, pq.Array(exps.Tags)).
 	// 	WillReturnRows(newMockRows)
 
