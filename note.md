@@ -855,3 +855,11 @@ make: *** [cup] Error 1
 ```
 
 > !!! 4 days
+
+## Fixed unittest EXP03
+
+> update command
+> 
+> from db.Prepare() & db.Exec()
+>
+> to db.QueryRow().Scan()
