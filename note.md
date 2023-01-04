@@ -1021,3 +1021,90 @@ expenses
                                  inside "Bonus middleware check Autorization"                                                               
 make: *** [newman] Error 1
 ```
+
+## 3 Days [04/01/2023 23:09]
+
+TODO:
+- Bonus middleware check Autorization ?
+- create postman environment ?
+- 2 func integration tests (TestITCreateExpensesHandler, TestITUpdateExpensesHandler)
+- other...
+
+> This is the first time to use Git seriously
+
+```sh
+*   f9da7c9 Merge branch 'DevITv2'
+|\  
+| * 6e26d68 create func TestITGetAllExpensesHandler
+| * 1323ba1 update command run newman collection
+| * 16d55a1 update note.md
+| * b67a200 create TestITGetAllExpensesHandler test pass outside sandbox
+|/  
+*   24c6f95 Merge branch 'RefacExpenses'
+|\  
+| * 3e0dfb6 update note.md
+| * 5a9ee15 try to manage something, but found solution to fixed error EXP03 for unittest
+| * 4672807 add ping database server for check connecting
+| * 7c13e83 noting update
+|/  
+* 63da823 clean up comment
+* d2c4978 update note.md
+*   37898e0 Merge branch 'DevIT'
+|\  
+| * 9bc7ffa create first step for integration test
+| * 4abdf81 update command
+* | 5d5fe73 update note.md
+|/  
+* 85f49b0 try compose up and test integration fail
+* 1c6f1c0 update command compose up & down
+* 679d971 update command to Makefile start&stop docker postgres database
+* 80443ec update note.md
+*   4154e85 Merge branch 'EXP04'
+|\  
+| * 40ce236 update note.md
+| * 2be301e add router GetAllExpensesHandler
+| * 137a372 create func TestGetAllExpensesHandler
+| * 166f5be create func GetAllExpensesHandler
+| * 972f597 update command to Makefile
+|/  
+* f70ce68 update note.md
+* d38c9c6 update note.md
+*   4f11833 Merge branch 'EXP03' - unittest error
+|\  
+| * dbf7a3a update unittest fail note.md
+| * b5377c3 try to fix unittest but still not pass use t.Skip()
+| * cf02862 add router UpdateExpensesHandler
+| * f936f22 create func TestUpdateExpensesHandler (test not pass) TODO: Fix it's
+| * beb0226 create func UpdateExpensesHandler
+|/  
+* e0fdd4e update note.md
+* eb4cdfa update note.md
+* 72c38f6 update note.md
+* 9690434 update note.md
+*   1c9ee3f Merge branch 'EXP02'
+|\  
+| * 84c955c update note.md
+| * 63e1be3 add router GetExpensesHandler
+| * 18abf27 create func TestGetExpensesHandler
+| * 49d8252 create func GetExpensesHandler
+|/  
+* 7565c00 update progress to note.md
+* 1b56b19 delete note.html
+* 89f071b create sample integration test but no connection to database
+* a069abd update db connection
+* 1009720 update note.md
+*   e5caf1c Merge branch 'EXP01'
+|\  
+| * ada111c update note.md
+| * d8c505d create func CreateExpensesHandler & TestCreateExpensesHandler
+| * 023d119 create test TestHealthHandler
+|/  
+* 88bacf1 update Makefile for run env PORT & DATABASE_URL
+* dd553d9 update important files for build system
+* dc3ba56 create Makefile
+* b7e195e implement graceful shutdown
+* 38c09ac create simple server
+* 4cf9280 create expenses struct & handler
+* 44a1d61 create project structure
+* e873bfb just empty note.md
+```
