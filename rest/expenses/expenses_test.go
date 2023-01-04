@@ -23,12 +23,10 @@ func TestHealthHandler(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, "/", strings.NewReader(""))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
-
-	h := expenses{}
 	c := e.NewContext(req, rec)
+	h := expenses{}
 
 	err := h.HealthHandler(c)
-
 	if assert.NoError(t, err) {
 		assert.Equal(t, http.StatusOK, rec.Code)
 		assert.Equal(t, "Server health OKKK", rec.Body.String())
@@ -37,7 +35,7 @@ func TestHealthHandler(t *testing.T) {
 
 func TestCreateExpensesHandler(t *testing.T) {
 	// t.Skip("TODO: EXP01: POST /expenses - with json body")
-	t.Log("EXP01: POST /expenses - with json body  COMPLETED!!")
+	// t.Log("EXP01: POST /expenses - with json body  COMPLETED!!")
 
 	e := echo.New()
 
@@ -45,7 +43,7 @@ func TestCreateExpensesHandler(t *testing.T) {
 		"title": "strawberry smoothie",
 		"amount": 79,
 		"note": "night market promotion discount 10 bath", 
-		"tags": ["food", "beverage"]
+		"tags": ["food","beverage"]
 	}`
 	body := bytes.NewBufferString(strBody)
 
@@ -56,15 +54,14 @@ func TestCreateExpensesHandler(t *testing.T) {
 	exp := Expenses{}
 	err := json.Unmarshal([]byte(strBody), &exp)
 	if err != nil {
-		t.Fatalf("an error, json.Marshal *bytes.Buffer: '%s' ", err)
+		t.Fatalf("an error, json.Unmarshal *bytes.Buffer: '%s' ", err)
 	}
 
-	// create new sqlmock
 	newMockRows := sqlmock.NewRows([]string{"id"}).AddRow(1)
-	db, mock, err := sqlmock.New()
 
+	db, mock, err := sqlmock.New()
 	mock.ExpectQuery("INSERT INTO expenses").
-		WithArgs(exp.Title, exp.Amount, exp.Note, pq.Array(exp.Tags)).
+		WithArgs(&exp.Title, &exp.Amount, &exp.Note, pq.Array(&exp.Tags)).
 		WillReturnRows(newMockRows)
 
 	if err != nil {
@@ -89,13 +86,16 @@ func TestCreateExpensesHandler(t *testing.T) {
 
 func TestGetExpensesHandler(t *testing.T) {
 	// t.Skip("TODO: EXP02: GET /expenses/:id")
-	t.Log("EXP02: GET /expenses/:id COMPLETED!!")
+	// t.Log("EXP02: GET /expenses/:id COMPLETED!!")
 
 	e := echo.New()
 
 	req := httptest.NewRequest(http.MethodGet, "/expenses/:id", strings.NewReader(""))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	c.SetParamNames("id")
+	c.SetParamValues("1")
 
 	newMockRows := sqlmock.NewRows([]string{"id", "title", "amount", "note", "tags"}).
 		AddRow(1, "apple smoothie", 89, "no discount", pq.Array([]string{"beverage"}))
@@ -112,9 +112,6 @@ func TestGetExpensesHandler(t *testing.T) {
 	}
 
 	h := expenses{db}
-	c := e.NewContext(req, rec)
-	c.SetParamNames("id")
-	c.SetParamValues("1")
 
 	expected := "{\"id\":1,\"title\":\"apple smoothie\",\"amount\":89,\"note\":\"no discount\",\"tags\":[\"beverage\"]}"
 
@@ -130,66 +127,45 @@ func TestGetExpensesHandler(t *testing.T) {
 }
 
 func TestUpdateExpensesHandler(t *testing.T) {
-	t.Skip("TODO: EXP03: PUT /expenses/:id - with json body FAILED!!")
+	// t.Skip("TODO: EXP03: PUT /expenses/:id - with json body COMPLETED!!")
 	// t.Log("EXP03: PUT /expenses/:id - with json body")
 
 	e := echo.New()
 
-	str_body := `{
+	strBody := `{
 		"title": "apple smoothie",
 		"amount": 89,
 		"note": "no discount",
 		"tags": ["beverage"]
 	}`
-	body := bytes.NewBufferString(str_body)
+	body := bytes.NewBufferString(strBody)
 
 	req := httptest.NewRequest(http.MethodPut, "/expenses/:id", body)
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	c.SetParamNames("id")
+	c.SetParamValues("1")
 
-	exps := Expenses{}
-	err := json.Unmarshal([]byte(str_body), &exps)
+	exp := Expenses{}
+	err := json.Unmarshal([]byte(strBody), &exp)
 	if err != nil {
 		t.Fatalf("an error, json.Marshal *bytes.Buffer: '%s' ", err)
 	}
 
 	newMockRows := sqlmock.NewRows([]string{"id", "title", "amount", "note", "tags"}).
-		AddRow(1, exps.Title, exps.Amount, exps.Note, pq.Array(exps.Tags))
+		AddRow(1, &exp.Title, &exp.Amount, &exp.Note, pq.Array(&exp.Tags))
 
 	db, mock, err := sqlmock.New()
-
-	// Error: 500 Step Prepare: Error
-	// mock.ExpectPrepare("UPDATE expenses SET title=$2, amount=$3, note=$4, tags=$5 WHERE id=$1").
-	// 	ExpectQuery().
-	// 	WithArgs("1", exps.Title, exps.Amount, exps.Note, pq.Array(exps.Tags)).
-	// 	WillReturnRows(newMockRows)
-
-	// Error: 400 Step Prepare: Pass, Step Exec: Error
-	// mock.ExpectPrepare("UPDATE expenses SET title=\\$2, amount=\\$3, note=\\$4, tags=\\$5 WHERE id=\\$1").
-	// 	ExpectQuery().
-	// 	WithArgs("1", exps.Title, exps.Amount, exps.Note, pq.Array(exps.Tags)).
-	// 	WillReturnRows(newMockRows)
-
-	// Error: 400 Step Prepare: Pass, Step Exec: Error
-	mock.ExpectPrepare("UPDATE expenses").
-		ExpectQuery().
-		WithArgs("1", exps.Title, exps.Amount, exps.Note, pq.Array(exps.Tags)).
+	mock.ExpectQuery("UPDATE expenses SET").
+		WithArgs("1", &exp.Title, &exp.Amount, &exp.Note, pq.Array(&exp.Tags)).
 		WillReturnRows(newMockRows)
-
-	// Error: 400
-	// mock.ExpectPrepare("UPDATE expenses").
-	// 	ExpectQuery().
-	// 	WithArgs(1, exps.Title, exps.Amount, exps.Note, pq.Array(exps.Tags)).
-	// 	WillReturnRows(newMockRows)
 
 	if err != nil {
 		t.Fatalf("an error, mock expect query '%s' was not...", err)
 	}
 
 	h := expenses{db}
-	c := e.NewContext(req, rec)
-	c.SetParamNames("id")
-	c.SetParamValues("1")
 
 	expected := "{\"id\":1,\"title\":\"apple smoothie\",\"amount\":89,\"note\":\"no discount\",\"tags\":[\"beverage\"]}"
 
@@ -206,7 +182,7 @@ func TestUpdateExpensesHandler(t *testing.T) {
 
 func TestGetAllExpensesHandler(t *testing.T) {
 	// t.Skip("TODO: EXP04: GET /expenses")
-	t.Log("EXP04: GET /expenses COMPLETED!!")
+	// t.Log("EXP04: GET /expenses COMPLETED!!")
 
 	e := echo.New()
 
