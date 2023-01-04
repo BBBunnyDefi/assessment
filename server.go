@@ -18,7 +18,9 @@ func main() {
 	h := expenses.NewApp(expenses.InitDB(os.Getenv("DATABASE_URL")))
 
 	e := echo.New()
+	// e.Debug = true
 	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
 
 	e.GET("/", h.HealthHandler)
 	// EXP01: POST /expenses - with json body
@@ -47,7 +49,7 @@ func main() {
 	signal.Notify(shutdown, os.Interrupt, syscall.SIGTERM)
 
 	<-shutdown
-	fmt.Println("graceful shutting down...แล้วมั้งนะ")
+	fmt.Println("graceful shutting down...")
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
