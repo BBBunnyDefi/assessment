@@ -18,3 +18,6 @@ cup:
 
 cdown:
 	docker-compose -f docker-composer.test.yml down
+
+newman:
+	newman run expenses.postman_collection.json
