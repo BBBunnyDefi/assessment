@@ -16,6 +16,11 @@ func InitDB(url string) *sql.DB {
 		log.Fatal("Connect to database error:", err)
 	}
 
+	err = db.Ping()
+	if err != nil {
+		log.Fatal("Check database server:", err)
+	}
+
 	log.Println("Database connection OK!!")
 
 	return db
