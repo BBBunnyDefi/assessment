@@ -1,4 +1,4 @@
-# Step & Command
+# Step & Commands & Journey
 
 ## initialize go project assessment
 
@@ -863,3 +863,161 @@ make: *** [cup] Error 1
 > from db.Prepare() & db.Exec()
 >
 > to db.QueryRow().Scan()
+
+## implement integration tests v2
+
+> create new branch (DevITv2)
+>
+> create func TestITGetAllExpensesHandler() this check data in database more than once
+
+> Note: 
+> 
+> sandbox mode use `const serverPort = 80`
+>
+> terminal mode use `const serverPort = 2565` and run database and server
+>
+
+> Example: terminal mode
+
+```sh
+$ make dbstart
+docker start assessment-db-1
+assessment-db-1
+
+$ make server
+DATABASE_URL=postgres://root:root@localhost:5432/assessment?sslmode=disable PORT=:2565 go run server.go
+2023/01/04 22:45:49 Database connection OK!!
+
+   ____    __
+  / __/___/ /  ___
+ / _// __/ _ \/ _ \
+/___/\__/_//_/\___/ v4.10.0
+High performance, minimalist Go web framework
+https://echo.labstack.com
+____________________________________O/_______
+                                    O\
+⇨ http server started on [::]:2565
+
+```
+
+> terminal 2 run integration tests
+
+```sh
+make ittest
+go test -v --tags=integration ./...
+?       github.com/BBBunnyDefi/assessment       [no test files]
+=== RUN   TestITHealthHandler
+
+   ____    __
+  / __/___/ /  ___
+ / _// __/ _ \/ _ \
+/___/\__/_//_/\___/ v4.10.0
+High performance, minimalist Go web framework
+https://echo.labstack.com
+____________________________________O/_______
+                                    O\
+--- PASS: TestITHealthHandler (0.00s)
+=== RUN   TestITCreateExpensesHandler
+    expenses_integration_test.go:81: TODO: implement integration EXP01: POST /expenses - with json body
+--- SKIP: TestITCreateExpensesHandler (0.00s)
+=== RUN   TestITGetExpensesHandler
+
+   ____    __
+  / __/___/ /  ___
+ / _// __/ _ \/ _ \
+/___/\__/_//_/\___/ v4.10.0
+High performance, minimalist Go web framework
+https://echo.labstack.com
+____________________________________O/_______
+                                    O\
+--- PASS: TestITGetExpensesHandler (0.00s)
+=== RUN   TestITUpdateExpensesHandler
+    expenses_integration_test.go:140: TODO: implement integration EXP03: PUT /expenses/:id - with json body
+--- SKIP: TestITUpdateExpensesHandler (0.00s)
+=== RUN   TestITGetAllExpensesHandler
+
+   ____    __
+  / __/___/ /  ___
+ / _// __/ _ \/ _ \
+/___/\__/_//_/\___/ v4.10.0
+High performance, minimalist Go web framework
+https://echo.labstack.com
+____________________________________O/_______
+                                    O\
+--- PASS: TestITGetAllExpensesHandler (0.00s)
+PASS
+ok      github.com/BBBunnyDefi/assessment/rest/expenses (cached)
+```
+
+> test new man collection but error [500] ? at (first time)
+>
+> test 3 times pass and check data with Thunder client 
+
+```sh
+make newman
+newman run expenses.postman_collection.json
+newman
+
+expenses
+
+→ create expense
+  POST http://localhost:2565/expenses [201 Created, 256B, 40ms]
+  ┌
+  │ {
+  │   id: 4,
+  │   title: 'strawberry smoothie',
+  │   amount: 79,
+  │   note: 'night market promotion discount 10 bath',
+  │   tags: [ 'food', 'beverage' ]
+  │ }
+  └
+  ✓  should response success(201) and object of customer
+  ✓  Status code is 201 or 202
+
+→ get latest expense (expenses/:id)
+  GET http://localhost:2565/expenses/4 [200 OK, 251B, 8ms]
+  ✓  Status code is 200
+  ✓  should response object of latest expense
+
+→ update latest expenses
+  PUT http://localhost:2565/expenses/4 [200 OK, 210B, 9ms]
+  ✓  Status code is 200
+  ✓  should response success(200) and object of customer
+
+→ get all expenses
+  GET http://localhost:2565/expenses [200 OK, 514B, 8ms]
+  ✓  Status code is 200
+  ✓  should response success(200) and object of latest expense
+
+→ Bonus middleware check Autorization
+  GET http://localhost:2565/expenses [200 OK, 514B, 6ms]
+  1. Status code is 401 Unauthorized
+
+┌─────────────────────────┬──────────────────┬──────────────────┐
+│                         │         executed │           failed │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│              iterations │                1 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│                requests │                5 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│            test-scripts │                5 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│      prerequest-scripts │                0 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│              assertions │                9 │                1 │
+├─────────────────────────┴──────────────────┴──────────────────┤
+│ total run duration: 188ms                                     │
+├───────────────────────────────────────────────────────────────┤
+│ total data received: 1.12kB (approx)                          │
+├───────────────────────────────────────────────────────────────┤
+│ average response time: 14ms [min: 6ms, max: 40ms, s.d.: 12ms] │
+└───────────────────────────────────────────────────────────────┘
+
+  #  failure                     detail                                                                                                     
+                                                                                                                                            
+ 1.  AssertionError              Status code is 401 Unauthorized                                                                            
+                                 expected response to have status code 401 but got 200                                                      
+                                 at assertion:0 in test-script                                                                              
+                                 inside "Bonus middleware check Autorization"                                                               
+make: *** [newman] Error 1
+```
