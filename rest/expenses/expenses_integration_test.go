@@ -22,11 +22,11 @@ import (
 )
 
 // use for run docker compose
-const serverPort = 80
+// const serverPort = 80
 
 // use for run in terminal connect with database
 // run database & server for testing outside sandbox
-// const serverPort = 2565
+const serverPort = 2565
 
 const databaseURL = "postgres://root:root@db/assessment?sslmode=disable"
 
