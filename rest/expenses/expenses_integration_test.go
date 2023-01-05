@@ -22,11 +22,11 @@ import (
 )
 
 // use for run docker compose
-// const serverPort = 80
+const serverPort = 80
 
 // use for run in terminal connect with database
 // run database & server for testing outside sandbox
-const serverPort = 2565
+// const serverPort = 2565
 
 const databaseURL = "postgres://root:root@db/assessment?sslmode=disable"
 
@@ -137,7 +137,61 @@ func TestITGetExpensesHandler(t *testing.T) {
 
 func TestITUpdateExpensesHandler(t *testing.T) {
 	// t.Log("TODO: implement integration EXP03: PUT /expenses/:id - with json body")
-	t.Skip("TODO: implement integration EXP03: PUT /expenses/:id - with json body")
+	// t.Skip("TODO: implement integration EXP03: PUT /expenses/:id - with json body")
+	eh := echo.New()
+	go func(e *echo.Echo) {
+		db, err := sql.Open("postgres", databaseURL)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		h := NewApp(db)
+
+		e.PUT("/expenses/:id", h.UpdateExpensesHandler)
+		e.Start(fmt.Sprintf(":%d", serverPort))
+	}(eh)
+	for {
+		conn, err := net.DialTimeout("tcp", fmt.Sprintf("localhost:%d", serverPort), 30*time.Second)
+		if err != nil {
+			log.Println(err)
+		}
+		if conn != nil {
+			conn.Close()
+			break
+		}
+	}
+
+	reqBody := `{
+		"title": "apple smoothie",
+		"amount": 89,
+		"note": "no discount",
+		"tags": ["beverage"]
+	}`
+	req, err := http.NewRequest(http.MethodPut, fmt.Sprintf("http://localhost:%d/expenses/1", serverPort), strings.NewReader(reqBody))
+	assert.NoError(t, err)
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+
+	client := http.Client{}
+
+	resp, err := client.Do(req)
+	assert.NoError(t, err)
+
+	byteBody, err := ioutil.ReadAll(resp.Body)
+	assert.NoError(t, err)
+	resp.Body.Close()
+
+	// Assertions
+	expected := "{\"id\":1,\"title\":\"apple smoothie\",\"amount\":89,\"note\":\"no discount\",\"tags\":[\"beverage\"]}"
+
+	if assert.NoError(t, err) {
+		assert.Equal(t, http.StatusOK, resp.StatusCode)
+		assert.Equal(t, expected, strings.TrimSpace(string(byteBody)))
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	err = eh.Shutdown(ctx)
+	assert.NoError(t, err)
 }
 
 func TestITGetAllExpensesHandler(t *testing.T) {
