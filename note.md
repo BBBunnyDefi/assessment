@@ -1108,3 +1108,17 @@ make: *** [newman] Error 1
 * 44a1d61 create project structure
 * e873bfb just empty note.md
 ```
+
+## implement integration tests v3
+
+> integration pass all, create 2 new func
+>
+> func TestITUpdateExpensesHandler, TestITCreateExpensesHandler
+
+**TODO**:
+- Bonus middleware check Autorization ?
+- create postman environment ?
+- ~~2 func integration tests (TestITCreateExpensesHandler, TestITUpdateExpensesHandler)~~
+- other...
+
+> end of today 05/01/2023 23:17 :tear:
