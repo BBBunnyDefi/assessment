@@ -1123,8 +1123,4 @@ make: *** [newman] Error 1
 - ~~2 func integration tests (TestITCreateExpensesHandler, TestITUpdateExpensesHandler)~~
 - other...
 
-> end of today 05/01/2023 23:17 
-
-:tear: 
-
-:smile:
+> end of today 05/01/2023 23:17 :sleepy:
