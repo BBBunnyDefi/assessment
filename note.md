@@ -1024,7 +1024,7 @@ make: *** [newman] Error 1
 
 ## 3 Days [04/01/2023 23:09]
 
-TODO:
+**TODO**:
 - Bonus middleware check Autorization ?
 - create postman environment ?
 - 2 func integration tests (TestITCreateExpensesHandler, TestITUpdateExpensesHandler)
