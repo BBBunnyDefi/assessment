@@ -78,7 +78,59 @@ func TestITHealthHandler(t *testing.T) {
 
 func TestITCreateExpensesHandler(t *testing.T) {
 	// t.Log("TODO: implement integration EXP01: POST /expenses - with json body")
-	t.Skip("TODO: implement integration EXP01: POST /expenses - with json body")
+	// t.Skip("TODO: implement integration EXP01: POST /expenses - with json body")
+	eh := echo.New()
+	go func(e *echo.Echo) {
+		db, err := sql.Open("postgres", databaseURL)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		h := NewApp(db)
+
+		e.POST("/expenses", h.CreateExpensesHandler)
+		e.Start(fmt.Sprintf(":%d", serverPort))
+	}(eh)
+	for {
+		conn, err := net.DialTimeout("tcp", fmt.Sprintf("localhost:%d", serverPort), 30*time.Second)
+		if err != nil {
+			log.Println(err)
+		}
+		if conn != nil {
+			conn.Close()
+			break
+		}
+	}
+	// Arrange
+	reqBody := `{
+		"title": "strawberry smoothie",
+		"amount": 79,
+		"note": "night market promotion discount 10 bath", 
+		"tags": ["food","beverage"]
+	}`
+	req, err := http.NewRequest(http.MethodPost, fmt.Sprintf("http://localhost:%d/expenses", serverPort), strings.NewReader(reqBody))
+	assert.NoError(t, err)
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	client := http.Client{}
+
+	resp, err := client.Do(req)
+	assert.NoError(t, err)
+
+	byteBody, err := ioutil.ReadAll(resp.Body)
+	assert.NoError(t, err)
+	resp.Body.Close()
+
+	expected := "{\"id\":1,\"title\":\"strawberry smoothie\",\"amount\":79,\"note\":\"night market promotion discount 10 bath\",\"tags\":[\"food\",\"beverage\"]}"
+
+	if assert.NoError(t, err) {
+		assert.Equal(t, http.StatusCreated, resp.StatusCode)
+		assert.Equal(t, expected, strings.TrimSpace(string(byteBody)))
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	err = eh.Shutdown(ctx)
+	assert.NoError(t, err)
 }
 
 func TestITGetExpensesHandler(t *testing.T) {
