@@ -1124,3 +1124,14 @@ make: *** [newman] Error 1
 - other...
 
 > end of today 05/01/2023 23:17 :sleepy:
+
+## still not complete
+
+> 06/01/2023
+> - Bonus middleware check Autorization ?
+> - create postman environment ?
+> - ...
+>
+> :panda_face: 
+>
+> tomorrow night, deadline :point_right: [07/01/2023 23:59:59]
