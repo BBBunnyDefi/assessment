@@ -101,7 +101,7 @@ func TestITCreateExpensesHandler(t *testing.T) {
 			break
 		}
 	}
-	// Arrange
+
 	reqBody := `{
 		"title": "strawberry smoothie",
 		"amount": 79,
@@ -232,7 +232,6 @@ func TestITUpdateExpensesHandler(t *testing.T) {
 	assert.NoError(t, err)
 	resp.Body.Close()
 
-	// Assertions
 	expected := "{\"id\":1,\"title\":\"apple smoothie\",\"amount\":89,\"note\":\"no discount\",\"tags\":[\"beverage\"]}"
 
 	if assert.NoError(t, err) {
@@ -288,7 +287,7 @@ func TestITGetAllExpensesHandler(t *testing.T) {
 	exps := []Expenses{}
 	err = json.Unmarshal(byteBody, &exps)
 	if err != nil {
-		log.Println(err)
+		log.Println("an error, json.Unmarshal: ", err)
 	}
 
 	expected := 1

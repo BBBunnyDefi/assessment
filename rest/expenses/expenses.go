@@ -98,7 +98,7 @@ func (h *expenses) UpdateExpensesHandler(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, Err{Message: "can't query row returning expenses: " + err.Error()})
 	}
 
-	return c.JSON(http.StatusOK, &e)
+	return c.JSON(http.StatusOK, e)
 }
 
 // EXP04: GET /expenses

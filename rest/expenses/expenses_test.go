@@ -35,7 +35,7 @@ func TestHealthHandler(t *testing.T) {
 
 func TestCreateExpensesHandler(t *testing.T) {
 	// t.Skip("TODO: EXP01: POST /expenses - with json body")
-	// t.Log("EXP01: POST /expenses - with json body  COMPLETED!!")
+	// t.Log("EXP01: POST /expenses - with json body")
 
 	e := echo.New()
 
@@ -65,7 +65,7 @@ func TestCreateExpensesHandler(t *testing.T) {
 		WillReturnRows(newMockRows)
 
 	if err != nil {
-		t.Fatalf("an error, mock expect query '%s' was not...", err)
+		t.Fatalf("an error, mock expect insert query '%s' was not...", err)
 	}
 
 	h := expenses{db}
@@ -75,7 +75,7 @@ func TestCreateExpensesHandler(t *testing.T) {
 
 	err = h.CreateExpensesHandler(c)
 	if err != nil {
-		t.Fatalf("an error, act '%s' was not...", err)
+		t.Fatalf("an error, act func CreateExpensesHandler '%s' was not...", err)
 	}
 
 	if assert.NoError(t, err) {
@@ -86,7 +86,7 @@ func TestCreateExpensesHandler(t *testing.T) {
 
 func TestGetExpensesHandler(t *testing.T) {
 	// t.Skip("TODO: EXP02: GET /expenses/:id")
-	// t.Log("EXP02: GET /expenses/:id COMPLETED!!")
+	// t.Log("EXP02: GET /expenses/:id")
 
 	e := echo.New()
 
@@ -108,7 +108,7 @@ func TestGetExpensesHandler(t *testing.T) {
 		WillReturnRows(newMockRows)
 
 	if err != nil {
-		t.Fatalf("an error, mock expect query '%s' was not...", err)
+		t.Fatalf("an error, mock expect select query '%s' was not...", err)
 	}
 
 	h := expenses{db}
@@ -117,7 +117,7 @@ func TestGetExpensesHandler(t *testing.T) {
 
 	err = h.GetExpensesHandler(c)
 	if err != nil {
-		t.Fatalf("an error, act '%s' was not...", err)
+		t.Fatalf("an error, act func GetExpensesHandler '%s' was not...", err)
 	}
 
 	if assert.NoError(t, err) {
@@ -127,7 +127,7 @@ func TestGetExpensesHandler(t *testing.T) {
 }
 
 func TestUpdateExpensesHandler(t *testing.T) {
-	// t.Skip("TODO: EXP03: PUT /expenses/:id - with json body COMPLETED!!")
+	// t.Skip("TODO: EXP03: PUT /expenses/:id - with json body")
 	// t.Log("EXP03: PUT /expenses/:id - with json body")
 
 	e := echo.New()
@@ -162,7 +162,7 @@ func TestUpdateExpensesHandler(t *testing.T) {
 		WillReturnRows(newMockRows)
 
 	if err != nil {
-		t.Fatalf("an error, mock expect query '%s' was not...", err)
+		t.Fatalf("an error, mock expect update query '%s' was not...", err)
 	}
 
 	h := expenses{db}
@@ -171,7 +171,7 @@ func TestUpdateExpensesHandler(t *testing.T) {
 
 	err = h.UpdateExpensesHandler(c)
 	if err != nil {
-		t.Fatalf("an error, act '%s' was not...", err)
+		t.Fatalf("an error, act func UpdateExpensesHandler '%s' was not...", err)
 	}
 
 	if assert.NoError(t, err) {
@@ -182,7 +182,7 @@ func TestUpdateExpensesHandler(t *testing.T) {
 
 func TestGetAllExpensesHandler(t *testing.T) {
 	// t.Skip("TODO: EXP04: GET /expenses")
-	// t.Log("EXP04: GET /expenses COMPLETED!!")
+	// t.Log("EXP04: GET /expenses")
 
 	e := echo.New()
 
@@ -200,7 +200,7 @@ func TestGetAllExpensesHandler(t *testing.T) {
 		WillReturnRows(newMockRows)
 
 	if err != nil {
-		t.Fatalf("an error, mock expect query '%s' was not...", err)
+		t.Fatalf("an error, mock expect select all query '%s' was not...", err)
 	}
 
 	h := expenses{db}
@@ -210,7 +210,7 @@ func TestGetAllExpensesHandler(t *testing.T) {
 
 	err = h.GetAllExpensesHandler(c)
 	if err != nil {
-		t.Fatalf("an error, act '%s' was not...", err)
+		t.Fatalf("an error, act func GetAllExpensesHandler '%s' was not...", err)
 	}
 
 	if assert.NoError(t, err) {
